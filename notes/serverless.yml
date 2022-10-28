@@ -10,32 +10,54 @@ provider:
 functions:
   createNote:
     handler: handler.createNote
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: !GetAtt NewResource.Arn
     events:
       - http:
-          path: note
+          path: notes
           method: post
 
   updateNote:
     handler: handler.updateNote
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: !GetAtt NewResource.Arn
     events:
       - http:
-          path: note/{id}
+          path: notes/{id}
           method: put
 
   deleteNote:
     handler: handler.deleteNote
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+        Resource: !GetAtt NewResource.Arn
     events:
       - http:
-          path: note/{id}
+          path: notes/{id}
           method: delete
 
   getAllNotes:
     handler: handler.getAllNotes
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+        Resource: !GetAtt NewResource.Arn
     events:
       - http:
-          path: note
+          path: notes
           method: get
 
+plugins:
+  - serverless-iam-roles-per-function
 # you can add CloudFormation resource templates here
 resources:
  Resources:
